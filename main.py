@@ -8,10 +8,6 @@ PAY_APP_URL = os.environ['PAY_APP_URL']
 
 app = Flask(__name__)
 
-from random import randint
-def id_generator():
-  return randint(100000000,999999999)
-
 @app.after_request
 def cache_headers(response):    
   response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
@@ -20,24 +16,37 @@ def cache_headers(response):
 
 def get_status(id):
   global PAY_APP_URL
-  r = requests.get(PAY_APP_URL + '/status/' + id)
+  url = PAY_APP_URL + 'status/' + id
+  print url
+  r = requests.get(url)
   return r.json()
 
 @app.route('/', methods = ['GET'])
 def create_get():
     res = make_response(
-      '<html><head><title>New Payment</title></head>'\
-      '<body>'\
+      '<html>'\
+      '<head>'\
+      '  <title>New Payment</title>'\
+      '  <script type="text/javascript">'\
+      '    function set_id() {'\
+      '      var id = Math.floor(Math.random() * 899999) + 100000;'\
+      '      document.getElementById(\'id\').value = id;'\
+      '      document.getElementById(\'iddiv\').innerHTML = id;'\
+      '    }'\
+      '  </script>'\
+      '</head>'\
+      '<body onload="set_id(); ">'\
       '  <form action="' + url_for('create_post') + '" method="POST" target="_blank">'\
-      '    <input type="hidden" name="id" value="' + str(id_generator()) + '" />' \
-      '    <p><button type="submit">Start Back/Forward Demo</button></p>'\
+
+      '    <input type="hidden" id="id" name="id" value="" />' \
+      '    <p><button type="submit" onclick="set_id(); ">Start Back/Forward Demo</button></p>'\
+      '    <p>ID = <span id="iddiv"></span></p>'\
       '    <p>(Opens in new Tab)</p>'
       '  </form>'\
       '</body>'\
       '</html>'
     )
     
-    res.set_cookie('id', '', expires=0)
     return res
 
 @app.route('/', methods = ['POST'])
@@ -83,7 +92,7 @@ def start_get():
 @app.route('/forward/<int:id>', methods=['GET'])
 def forward(id):
   global PAY_APP_URL
-  return redirect(PAY_APP_URL + '/start/' + str(id), code=302)
+  return redirect(PAY_APP_URL + 'start/' + str(id), code=302)
   
 
 @app.route('/return')
