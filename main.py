@@ -28,10 +28,10 @@ def create_get():
     res = make_response(
       '<html><head><title>New Payment</title></head>'\
       '<body>'\
-      '  <h1>Government Service</h1>'\
-      '  <form action="' + url_for('create_post') + '" method="POST">'\
+      '  <form action="' + url_for('create_post') + '" method="POST" target="_blank">'\
       '    <input type="hidden" name="id" value="' + str(id_generator()) + '" />' \
-      '    <p><button type="submit">Create Payment</button></p>'\
+      '    <p><button type="submit">Start Back/Forward Demo</button></p>'\
+      '    <p>(Opens in new Tab)</p>'
       '  </form>'\
       '</body>'\
       '</html>'
