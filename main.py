@@ -17,7 +17,6 @@ def cache_headers(response):
 def get_status(id):
   global PAY_APP_URL
   url = PAY_APP_URL + 'status/' + id
-  print url
   r = requests.get(url)
   return r.json()
 
@@ -64,8 +63,9 @@ def start_get():
       if status['confirmed']:
           return \
             '<html><head><title>Start Payment</title></head>'\
-            '<body>'\
-            '  <h1>Government Service - Completed</h1>'\
+            '<body style=\"font-size: 150%;\">'\
+            '  <h1>Government Service</h1>'\
+            '  <h2>Time to Pay</h2>'\
             '  <p>You have already paid</p>'\
             '  <p><a href="' + url_for('returned', id=id) + '">Next</a></p>'\
             '</body>'\
@@ -73,8 +73,9 @@ def start_get():
       else:
         return \
           '<html><head><title>Start Payment</title></head>'\
-          '<body>'\
+          '<body style=\"font-size: 150%;\">'\
           '  <h1>Government Service - Resume Paying</h1>'\
+          '  <h2>Time to Pay</h2>'\
           '  <p>Your payment is in progress</p>'\
           '  <p><a href="' + url_for('forward', id=id)  + '">Resume</a></p>'\
           '</body>'\
@@ -82,8 +83,9 @@ def start_get():
     else:
       return \
         '<html><head><title>Start Payment</title></head>'\
-        '<body>'\
+        '<body style=\"font-size: 150%;\">'\
         '  <h1>Government Service</h1>'\
+        '  <h2>Time to Pay</h2>'\
         '  <p><a href="' + url_for('forward', id=id)  + '">Start Payment</a></p>'\
         '</body>'\
         '</html>'
@@ -101,8 +103,9 @@ def returned():
     status = get_status(id)
     return \
       '<html><head><title>Payment Complete</title></head>'\
-      '<body>'\
+      '<body style="font-size: 150%;">'\
       '  <h1>Government Service</h1>'\
+      '  <h2>Payment Outcome</h2>'\
       '  <p>Payment ' + ('success' if status['success'] else 'FAILED') + ' - reference is ' + str(id) + '</p>'\
       '</body>'\
       '</html>'
