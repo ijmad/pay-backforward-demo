@@ -4,7 +4,7 @@ from flask import Flask, redirect, url_for, request, make_response
 import os
 import requests
 
-DEMO_APP_URL = os.environ['PAY_APP_URL']
+PAY_APP_URL = os.environ['PAY_APP_URL']
 
 app = Flask(__name__)
 
@@ -19,7 +19,8 @@ def cache_headers(response):
   return response
 
 def get_status(id):
-  r = requests.get(os.environ['PAY_APP_URL'] + '/status/' + id)
+  global PAY_APP_URL
+  r = requests.get(PAY_APP_URL + '/status/' + id)
   return r.json()
 
 @app.route('/', methods = ['GET'])
@@ -81,6 +82,7 @@ def start_get():
         
 @app.route('/forward/<int:id>', methods=['GET'])
 def forward(id):
+  global PAY_APP_URL
   return redirect(PAY_APP_URL + '/start/' + str(id), code=302)
   
 
